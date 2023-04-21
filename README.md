@@ -10,6 +10,7 @@ Due to their high volatility and multitude of influential variables, cryptocurre
 
 We will analyze ETH historical price data sourced from (https://coincodex.com/crypto/ethereum/historical-data/) between 2017 and 2021 fitted to three different machine learning models in order to discern the model with the greatest predictive capacity for our price data. The three models we chose were a Prophet forecasting model, a Support Vector Machine (SVM) model, and a Long Short-Term Memory (LSTM) neural network fitted using ETH financial data from the Yahoo Finance 'yfinance' module.
 
+
 ---
 ## Files
 
@@ -23,10 +24,9 @@ The `eth_2017.csv` file contains Ethereum historical price data from 2017-2021.
 
 ---
 ## Prophet Forecasting Model
----
-### Pre-Processing
 In this section, we had initially found it tricky getting the Prophet model to predict accurately. Ultimately, we realized that changes to the fitted timeframe greatly influenced the predictive outcomes, and that shorter timeframes resulted in far more precise predictions.
 
+### Pre-Processing
 To begin, clean the data and prepare it to be fitted to the Prophet forecasting model.
 1. Read in the `eth_2017.csv` file as a DataFrame, indexing the `Date` column.
 2. Drop unnecessary columns.
@@ -43,8 +43,8 @@ To begin, clean the data and prepare it to be fitted to the Prophet forecasting 
 ![Prophet Plots](Main/PNG/ProphetEvaluation.png)
 
 ---
-## Support Vector Model (SVM)
----
+## Support Vector Machine (SVM) Model
+
 ### Prepare the Data
 1. Read in the `eth_2017.csv` file as a DataFrame, indexing the `Date` column.
 2. Filter the `Date` index and `Close` columns.
@@ -66,16 +66,29 @@ To begin, clean the data and prepare it to be fitted to the Prophet forecasting 
 
 ---
 ## LSTM Neural Network
----
+
 ### Prepare the Data
-1. Create a window size
-2. Create features and target column
-3. Split and train the data
-4. Reshapre the features for the model
+1. Define a window size
+2. Initialize features and target column
+3. Split the data
+4. Create a `MiniMaxScaler` object and train the data
+4. Reshape the features for the model
+
 ### Create the LSTM Model and Make Predictions
-1. Define a `Sequential()` model and add Layers 1-3 and an Output layer
-2. Compile and Summarize the model
-3. Train the model
-4. Make predictions
-5. Plot recommendations
-![LSTM Predictions](Main/PNG/)
+1. Define a LSTM `Sequential()` model and add Layer 1 as `model.add(LSTM(units=number_units, return_sequences=True, input_shape=(X_train.shape[1],1))` and `model.add(Dropout(dropout_fraction))` 
+2. Add 2 more layers and an Output layer
+3. Compile the model with `model.compile(loss='mse', optimizer='adam')`
+4. Summarize the model
+5. Train the model
+6. Make predictions
+7. Plot recommendations
+
+![LSTM Predictions](Main/PNG/LSTMResult.png)
+
+8. Print evaluation metrics
+
+![LSTM Evaluation](Main/PNG/SVMEvaluation.png)
+
+---
+## Conclusions
+All three models are informative but each have their own flaws to consider before trading with real money. The Prophet forecasting model produced a tight fit to the data, but its future predictions could be deemed questionable. The SVM produced a profitable strategy but it is unclear how sustainable it would be in the longterm. The LSTM produced a respectable R^2, but it did not perform as well during periods of high volatility. Further tuning to our models, or adoption of different models in the future could potentially return better results with the data at hand. We could also look into comparing our LSTM neural network with another trading algorithm that could perform under higher levels of volatility. 
